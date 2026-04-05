@@ -1,119 +1,94 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ravens: Hidden Josephnathanie Offense</title>
-    <style>
-        body { background: #241773; color: white; font-family: 'Arial Black', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .playbook-card { background: #000; border: 4px solid #9E7C0C; width: 380px; padding: 25px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
-        .header { border-bottom: 3px solid #9E7C0C; margin-bottom: 20px; padding-bottom: 10px; }
-        .header h2 { margin: 0; color: #fbca04; letter-spacing: 2px; }
-        .display { background: #1a1a1a; border: 2px solid #fff; padding: 25px; margin: 20px 0; border-radius: 12px; min-height: 100px; display: flex; flex-direction: column; justify-content: center; }
-        #suggestion { font-size: 38px; color: #fbca04; margin: 0; text-shadow: 2px 2px #000; }
-        #reasoning { font-size: 14px; color: #bbb; margin-top: 10px; font-family: 'Segoe UI', sans-serif; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        button { background: #241773; color: white; border: 2px solid #9E7C0C; padding: 12px; cursor: pointer; font-size: 14px; border-radius: 8px; transition: 0.2s; }
-        button:hover { background: #fbca04; color: #241773; border-color: #fff; }
-        .reset-btn { background: #444; grid-column: span 2; margin-top: 10px; border: none; }
-        .status-bar { margin-top: 20px; font-size: 13px; color: #9E7C0C; background: #111; padding: 8px; border-radius: 5px; }
-    </style>
-</head>
-<body>
-
-<div class="playbook-card">
-    <div class="header">
-        <h2>ASK MADDEN</h2>
-        <small style="color: #fff;">JOSEPHNATHANIE OFFENSE</small>
-    </div>
-
-    <div class="display">
-        <h1 id="suggestion">READY</h1>
-        <p id="reasoning">Set the distance to begin the drive.</p>
-    </div>
-
-    <div class="grid">
-        <button onclick="setDistance()">SET DISTANCE (AND ?)</button>
-        <button onclick="play(1)">1ST DOWN</button>
-        <button onclick="play(2)">2ND DOWN</button>
-        <button onclick="play(3)">3RD DOWN</button>
-        <button onclick="play(4)">4TH DOWN</button>
-        <button onclick="reset()" class="reset-btn">RESET DRIVE</button>
-    </div>
-
-    <div class="status-bar">
-        Current Situation: <span id="stat-line">1st & 10</span> | Last: <span id="last-play">None</span>
-    </div>
+<div class="grid">
+    <button onclick="updateSituation()">SET DISTANCE (AND ?)</button>
+    <button onclick="play(1)">1ST DOWN</button>
+    <button onclick="play(2)">2ND DOWN</button>
+    <button onclick="play(3)">3RD DOWN</button>
+    <button onclick="play(4)">4TH DOWN</button>
+    <button onclick="reset()" class="reset-btn">RESET DRIVE</button>
 </div>
 
 <script>
     let currentDist = 10;
-    let lastAction = "PASS"; // Starts as PASS because 1st down is a pass
+    let lastAction = "PASS"; // Default starting state
+    let currentDown = 1;
 
-    function setDistance() {
+    function updateSituation() {
         let d = prompt("Yards to go? (e.g., 10, 5, 2)");
         if (d !== null && d !== "") {
             currentDist = parseInt(d);
-            updateStatus();
+            
+            // If the user sets it to exactly 5, trigger the logic immediately
+            if (currentDist === 5) {
+                document.getElementById('suggestion').innerText = lastAction;
+                document.getElementById('reasoning').innerText = "Distance is 5: Repeating previous play type (" + lastAction + ").";
+                updateStatus(currentDown);
+            } else {
+                document.getElementById('suggestion').innerText = "DISTANCE SET";
+                document.getElementById('reasoning').innerText = "Now select your current Down.";
+                updateStatus(currentDown);
+            }
         }
     }
 
     function play(down) {
+        currentDown = down;
         let call = "";
         let why = "";
 
-        // CORE LOGIC: THE "AND 5" REPEAT RULE
-        if (currentDist === 5 && down !== 1) {
+        // 1. Check the "And 5" Repeat Rule first
+        if (currentDist === 5) {
             call = lastAction;
-            why = "Distance is exactly 5. Repeating previous play type: " + lastAction;
+            why = "Distance is 5: Repeating the " + lastAction + " from the previous down.";
         } 
-        // 1ST DOWN RULE
+        // 2. 1st Down Rule
         else if (down === 1) {
             call = "PASS";
             why = "1st Down: Josephnathanie Protocol (Always Pass).";
         }
-        // 2ND DOWN RULE
+        // 3. 2nd Down Logic
         else if (down === 2) {
             if (currentDist < 5) {
                 call = "PASS";
-                why = "2nd & Short (<5): Pass Attack.";
+                why = "2nd & Short (<5): Aerial attack.";
             } else {
                 call = "RUN";
-                why = "2nd & Long (>5): Ground Game.";
+                why = "2nd & Long (>5): Ground game.";
             }
         }
-        // 3RD DOWN RULE
+        // 4. 3rd Down Logic
         else if (down === 3) {
             if (currentDist < 5) {
                 call = "RUN";
-                why = "3rd & Short (<5): Power Move.";
+                why = "3rd & Short (<5): Power Run.";
             } else {
                 call = "PASS";
-                why = "3rd & Long (>5): Convert with Pass.";
+                why = "3rd & Long (>5): Deep Pass.";
             }
         }
-        // 4TH DOWN RULE
+        // 5. 4th Down Logic
         else if (down === 4) {
             call = "SPECIAL TEAMS";
-            why = "Consult with Special Teams Coach.";
+            why = "Consult Special Teams Coach.";
         }
 
-        // Update Global State
-        if (call !== "SPECIAL TEAMS") lastAction = call;
+        // Save the action for the next "and 5" check
+        if (call !== "SPECIAL TEAMS") {
+            lastAction = call;
+        }
         
-        // Update UI
         document.getElementById('suggestion').innerText = call;
         document.getElementById('reasoning').innerText = why;
         document.getElementById('last-play').innerText = lastAction;
         updateStatus(down);
     }
 
-    function updateStatus(down = 1) {
-        document.getElementById('stat-line').innerText = down + "ish & " + currentDist;
+    function updateStatus(down) {
+        document.getElementById('stat-line').innerText = down + " & " + currentDist;
     }
 
     function reset() {
         currentDist = 10;
+        currentDown = 1;
         lastAction = "PASS";
         document.getElementById('suggestion').innerText = "READY";
         document.getElementById('reasoning').innerText = "New Drive. 1st Down set.";
@@ -121,6 +96,3 @@
         updateStatus(1);
     }
 </script>
-
-</body>
-</html>
