@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ravens: Ask Josephnathanie</title>
+    <style>
+        body { background: #241773; color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .container { background: #000; border: 5px solid #9E7C0C; width: 350px; padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        .header { border-bottom: 2px solid #9E7C0C; margin-bottom: 20px; padding-bottom: 10px; }
+        .play-box { background: #1a1a1a; border: 2px solid #fff; padding: 20px; margin: 20px 0; border-radius: 10px; }
+        #suggestion { font-size: 32px; font-weight: 900; color: #fbca04; margin: 0; text-transform: uppercase; }
+        #reasoning { font-size: 14px; color: #aaa; margin-top: 10px; }
+        .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        button { background: #241773; color: white; border: 1px solid #9E7C0C; padding: 10px; cursor: pointer; font-weight: bold; border-radius: 5px; }
+        button:hover { background: #3a2a9c; }
+        .stats { font-size: 12px; margin-top: 15px; color: #9E7C0C; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h2 style="margin:0;">RAVENS OFFENSE</h2>
+        <small>JOSEPHNATHANIE COORDINATOR</small>
+    </div>
+
+    <div class="play-box">
+        <p style="margin:0; font-size: 12px; color: #fff;">SUGGESTED PLAY:</p>
+        <h1 id="suggestion">START DRIVE</h1>
+        <p id="reasoning">Awaiting First Down...</p>
+    </div>
+
+    <div class="controls">
+        <button onclick="processDown(1)">1ST DOWN</button>
+        <button onclick="setDistance()">SET DISTANCE</button>
+        <button onclick="processDown(2)">2ND DOWN</button>
+        <button onclick="processDown(3)">3RD DOWN</button>
+        <button onclick="processDown(4)">4TH DOWN</button>
+        <button onclick="resetDrive()" style="background: #444;">RESET DRIVE</button>
+    </div>
+
+    <div class="stats">
+        Current Distance: <span id="dist-display">10</span> yards
+    </div>
+</div>
+
+<script>
+    let currentDistance = 10;
+    let lastPlay = "";
+
+    function setDistance() {
+        let d = prompt("How many yards to the first down?");
+        if (d != null) {
+            currentDistance = parseInt(d);
+            document.getElementById('dist-display').innerText = currentDistance;
+        }
+    }
+
+    function processDown(down) {
+        let suggestion = "";
+        let reasoning = "";
+
+        if (down === 1) {
+            // Rule 1: Always Pass
+            suggestion = "PASS";
+            reasoning = "Standard 1st Down Protocol. Set the tone.";
+            lastPlay = "PASS";
+        } 
+        else if (down === 2) {
+            // Rule 2: Less than 5 = Pass | More than 5 = Run
+            if (currentDistance < 5) {
+                suggestion = "PASS";
+                reasoning = "2nd & Short (<5): Keep them guessing with a Pass.";
+            } else {
+                suggestion = "RUN";
+                reasoning = "2nd & Long (>5): Establish the ground game.";
+            }
+            lastPlay = suggestion;
+        } 
+        else if (down === 3) {
+            // Rule 3: Less than 5 = Run | More than 5 = Pass
+            if (currentDistance < 5) {
+                suggestion = "RUN";
+                reasoning = "3rd & Short (<5): Power run for the sticks.";
+            } else {
+                suggestion = "PASS";
+                reasoning = "3rd & Long (>5): Need chunks of yards. Pass.";
+            }
+            lastPlay = suggestion;
+        } 
+        else if (down === 4) {
+            // Rule 4: Consult Special Teams
+            suggestion = "SPECIAL TEAMS";
+            reasoning = "Consult with Special Teams Coach for Punt/FG/Go.";
+        }
+
+        updateUI(suggestion, reasoning);
+    }
+
+    function updateUI(play, note) {
+        document.getElementById('suggestion').innerText = play;
+        document.getElementById('reasoning').innerText = note;
+    }
+
+    function resetDrive() {
+        currentDistance = 10;
+        document.getElementById('dist-display').innerText = 10;
+        updateUI("START DRIVE", "Awaiting First Down...");
+        lastPlay = "";
+    }
+</script>
+
+</body>
+</html>
