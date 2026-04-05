@@ -3,66 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ravens: Josephnathanie Hybrid Offense</title>
+    <title>Ravens: Josephnathanie Final Offense</title>
     <style>
-        body { background: #241773; color: white; font-family: 'Arial Black', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .playbook-card { background: #000; border: 4px solid #9E7C0C; width: 380px; padding: 25px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
-        .header { border-bottom: 3px solid #9E7C0C; margin-bottom: 20px; padding-bottom: 10px; }
-        .header h2 { margin: 0; color: #fbca04; letter-spacing: 2px; }
-        .display { background: #1a1a1a; border: 2px solid #fff; padding: 25px; margin: 20px 0; border-radius: 12px; min-height: 110px; display: flex; flex-direction: column; justify-content: center; }
-        #suggestion { font-size: 38px; color: #fbca04; margin: 0; text-shadow: 2px 2px #000; }
-        #reasoning { font-size: 14px; color: #bbb; margin-top: 10px; font-family: 'Segoe UI', sans-serif; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        button { background: #241773; color: white; border: 2px solid #9E7C0C; padding: 12px; cursor: pointer; font-size: 13px; border-radius: 8px; transition: 0.2s; text-transform: uppercase; }
-        button:hover { background: #fbca04; color: #241773; border-color: #fff; }
-        .tone-btn { background: #9E7C0C; grid-column: span 2; font-weight: bold; }
-        .reset-btn { background: #444; grid-column: span 2; margin-top: 10px; border: none; }
-        .status-bar { margin-top: 20px; font-size: 13px; color: #9E7C0C; background: #111; padding: 8px; border-radius: 5px; }
-    </style>
-</head>
-<body>
-
-<div class="playbook-card">
-    <div class="header">
-        <h2>ASK MADDEN</h2>
-        <small style="color: #fff;">JOSEPHNATHANIE HYBRID</small>
-    </div>
-
-    <div class="display">
-        <h1 id="suggestion">SET THE TONE</h1>
-        <p id="reasoning">Choose your opening play or set distance.</p>
-    </div>
-
-    <div class="grid">
-        <button class="tone-btn" onclick="manualSet('PASS')">FORCE PASS (Set Tone)</button>
-        <button class="tone-btn" onclick="manualSet('RUN')">FORCE RUN (Set Tone)</button>
+        /* 2026 PURPLE RISING - ANNIVERSARY EDITION */
+        body { 
+            background: radial-gradient(circle, #241773 0%, #120a3d 100%); 
+            color: white; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+        }
+        .playbook-card { 
+            background: rgba(0, 0, 0, 0.95); 
+            border: 4px solid #9E7C0C; 
+            width: 380px; 
+            padding: 25px; 
+            border-radius: 24px; 
+            text-align: center; 
+            box-shadow: 0 0 40px #241773; 
+        }
+        .header { border-bottom: 2px solid #9E7C0C; margin-bottom: 15px; padding-bottom: 10px; }
+        .header h2 { margin: 0; color: #fbca04; font-size: 22px; letter-spacing: 2px; text-transform: uppercase; }
         
-        <button onclick="updateSituation()">SET DISTANCE (AND ?)</button>
-        <button onclick="play(1)">1ST DOWN</button>
-        <button onclick="play(2)">2ND DOWN</button>
-        <button onclick="play(3)">3RD DOWN</button>
-        <button onclick="play(4)">4TH DOWN</button>
+        .display-area { 
+            background: #241773; 
+            border: 2px solid #fbca04; 
+            padding: 20px; 
+            margin: 15px 0; 
+            border-radius: 15px; 
+            min-height: 120px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.6);
+        }
+        #suggestion { font-size: 42px; font-weight: 900; color: #fbca04; margin: 0; text-shadow: 2px 2px #000; }
+        #reasoning { font-size: 13px; color: #ccc; margin-top: 8px; font-style: italic; }
         
-        <button onclick="reset()" class="reset-btn">RESET DRIVE</button>
-    </div>
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        
+        /* Gold Facemask Theme Buttons */
+        button { 
+            background: #9E7C0C; 
+            color: #000; 
+            border: 1px solid #fbca04; 
+            padding: 14px; 
+            cursor: pointer; 
+            font-size: 12px; 
+            border-radius: 10px; 
+            font-weight: 800;
+            text-transform: uppercase; 
+            transition: all 0.2s ease;
+        }
+        button:hover { background: #fbca04; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        
+        .tone-btn { background: #5d48a1; color: white; border-color: #9E7C0C; }
+        .dist-btn { grid-column: span 2; background: #fff; color: #000; margin: 5px 0; }
+        .reset-btn { background: #C60C30; color: white; grid-column: span 2; border: none; margin-top: 15px; opacity: 0.8; }
+        .reset-btn:hover { opacity: 1; }
 
-    <div class="status-bar">
-        Situation: <span id="stat-line">1st & 10</span> | Memory: <span id="last-play">NONE</span>
-    </div>
-</div>
-
-<script>
-    let currentDist = 10;
-    let lastAction = "NONE"; 
-    let currentDown = 1;
-
-    // Use this to manually set the tone on 1st down
-    function manualSet(type) {
-        lastAction = type;
-        document.getElementById('suggestion').innerText = type;
-        document.getElementById('reasoning').innerText = "Tone Set: " + type + ". This will repeat if you hit 'And 5'.";
-        document.getElementById('last-play').innerText = lastAction;
-    }
-
-    function updateSituation() {
-        let d = prompt
+        .status-footer { margin-top:
