@@ -1,98 +1,68 @@
-<div class="grid">
-    <button onclick="updateSituation()">SET DISTANCE (AND ?)</button>
-    <button onclick="play(1)">1ST DOWN</button>
-    <button onclick="play(2)">2ND DOWN</button>
-    <button onclick="play(3)">3RD DOWN</button>
-    <button onclick="play(4)">4TH DOWN</button>
-    <button onclick="reset()" class="reset-btn">RESET DRIVE</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ravens: Josephnathanie Hybrid Offense</title>
+    <style>
+        body { background: #241773; color: white; font-family: 'Arial Black', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .playbook-card { background: #000; border: 4px solid #9E7C0C; width: 380px; padding: 25px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .header { border-bottom: 3px solid #9E7C0C; margin-bottom: 20px; padding-bottom: 10px; }
+        .header h2 { margin: 0; color: #fbca04; letter-spacing: 2px; }
+        .display { background: #1a1a1a; border: 2px solid #fff; padding: 25px; margin: 20px 0; border-radius: 12px; min-height: 110px; display: flex; flex-direction: column; justify-content: center; }
+        #suggestion { font-size: 38px; color: #fbca04; margin: 0; text-shadow: 2px 2px #000; }
+        #reasoning { font-size: 14px; color: #bbb; margin-top: 10px; font-family: 'Segoe UI', sans-serif; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        button { background: #241773; color: white; border: 2px solid #9E7C0C; padding: 12px; cursor: pointer; font-size: 13px; border-radius: 8px; transition: 0.2s; text-transform: uppercase; }
+        button:hover { background: #fbca04; color: #241773; border-color: #fff; }
+        .tone-btn { background: #9E7C0C; grid-column: span 2; font-weight: bold; }
+        .reset-btn { background: #444; grid-column: span 2; margin-top: 10px; border: none; }
+        .status-bar { margin-top: 20px; font-size: 13px; color: #9E7C0C; background: #111; padding: 8px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="playbook-card">
+    <div class="header">
+        <h2>ASK MADDEN</h2>
+        <small style="color: #fff;">JOSEPHNATHANIE HYBRID</small>
+    </div>
+
+    <div class="display">
+        <h1 id="suggestion">SET THE TONE</h1>
+        <p id="reasoning">Choose your opening play or set distance.</p>
+    </div>
+
+    <div class="grid">
+        <button class="tone-btn" onclick="manualSet('PASS')">FORCE PASS (Set Tone)</button>
+        <button class="tone-btn" onclick="manualSet('RUN')">FORCE RUN (Set Tone)</button>
+        
+        <button onclick="updateSituation()">SET DISTANCE (AND ?)</button>
+        <button onclick="play(1)">1ST DOWN</button>
+        <button onclick="play(2)">2ND DOWN</button>
+        <button onclick="play(3)">3RD DOWN</button>
+        <button onclick="play(4)">4TH DOWN</button>
+        
+        <button onclick="reset()" class="reset-btn">RESET DRIVE</button>
+    </div>
+
+    <div class="status-bar">
+        Situation: <span id="stat-line">1st & 10</span> | Memory: <span id="last-play">NONE</span>
+    </div>
 </div>
 
 <script>
     let currentDist = 10;
-    let lastAction = "PASS"; // Default starting state
+    let lastAction = "NONE"; 
     let currentDown = 1;
 
-    function updateSituation() {
-        let d = prompt("Yards to go? (e.g., 10, 5, 2)");
-        if (d !== null && d !== "") {
-            currentDist = parseInt(d);
-            
-            // If the user sets it to exactly 5, trigger the logic immediately
-            if (currentDist === 5) {
-                document.getElementById('suggestion').innerText = lastAction;
-                document.getElementById('reasoning').innerText = "Distance is 5: Repeating previous play type (" + lastAction + ").";
-                updateStatus(currentDown);
-            } else {
-                document.getElementById('suggestion').innerText = "DISTANCE SET";
-                document.getElementById('reasoning').innerText = "Now select your current Down.";
-                updateStatus(currentDown);
-            }
-        }
-    }
-
-    function play(down) {
-        currentDown = down;
-        let call = "";
-        let why = "";
-
-        // 1. Check the "And 5" Repeat Rule first
-        if (currentDist === 5) {
-            call = lastAction;
-            why = "Distance is 5: Repeating the " + lastAction + " from the previous down.";
-        } 
-        // 2. 1st Down Rule
-        else if (down === 1) {
-            call = "PASS";
-            why = "1st Down: Josephnathanie Protocol (Always Pass).";
-        }
-        // 3. 2nd Down Logic
-        else if (down === 2) {
-            if (currentDist < 5) {
-                call = "PASS";
-                why = "2nd & Short (<5): Aerial attack.";
-            } else {
-                call = "RUN";
-                why = "2nd & Long (>5): Ground game.";
-            }
-        }
-        // 4. 3rd Down Logic
-        else if (down === 3) {
-            if (currentDist < 5) {
-                call = "RUN";
-                why = "3rd & Short (<5): Power Run.";
-            } else {
-                call = "PASS";
-                why = "3rd & Long (>5): Deep Pass.";
-            }
-        }
-        // 5. 4th Down Logic
-        else if (down === 4) {
-            call = "SPECIAL TEAMS";
-            why = "Consult Special Teams Coach.";
-        }
-
-        // Save the action for the next "and 5" check
-        if (call !== "SPECIAL TEAMS") {
-            lastAction = call;
-        }
-        
-        document.getElementById('suggestion').innerText = call;
-        document.getElementById('reasoning').innerText = why;
+    // Use this to manually set the tone on 1st down
+    function manualSet(type) {
+        lastAction = type;
+        document.getElementById('suggestion').innerText = type;
+        document.getElementById('reasoning').innerText = "Tone Set: " + type + ". This will repeat if you hit 'And 5'.";
         document.getElementById('last-play').innerText = lastAction;
-        updateStatus(down);
     }
 
-    function updateStatus(down) {
-        document.getElementById('stat-line').innerText = down + " & " + currentDist;
-    }
-
-    function reset() {
-        currentDist = 10;
-        currentDown = 1;
-        lastAction = "PASS";
-        document.getElementById('suggestion').innerText = "READY";
-        document.getElementById('reasoning').innerText = "New Drive. 1st Down set.";
-        document.getElementById('last-play').innerText = "None";
-        updateStatus(1);
-    }
-</script>
+    function updateSituation() {
+        let d = prompt
