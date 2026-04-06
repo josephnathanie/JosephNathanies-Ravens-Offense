@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ravens: Hidden Josephnathanie Offense</title>
+    <title>Ravens: Josephnathanie Master Plan</title>
     <style>
-        /* 2026 PURPLE RISING AESTHETIC */
         body { 
             background: radial-gradient(circle, #241773 0%, #120a3d 100%); 
             color: white; font-family: 'Arial Black', sans-serif; 
@@ -17,12 +16,11 @@
         }
         .display { 
             background: #241773; border: 2px solid #fbca04; padding: 20px; 
-            margin: 20px 0; border-radius: 12px; min-height: 100px; display: flex; flex-direction: column; justify-content: center;
+            margin: 20px 0; border-radius: 12px; min-height: 110px; display: flex; flex-direction: column; justify-content: center;
         }
         #suggestion { font-size: 42px; color: #fbca04; margin: 0; text-shadow: 2px 2px #000; }
-        #reasoning { font-size: 13px; color: #ccc; margin-top: 10px; font-family: 'Segoe UI', sans-serif; }
+        #reasoning { font-size: 14px; color: #ccc; margin-top: 10px; font-family: 'Segoe UI', sans-serif; text-transform: uppercase; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        /* Gold Facemask Buttons */
         button { 
             background: #9E7C0C; color: black; border: 2px solid #fbca04; 
             padding: 14px; cursor: pointer; font-size: 13px; border-radius: 8px; font-weight: 900;
@@ -37,8 +35,8 @@
 <div class="playbook-card">
     <h2 style="margin:0; color:#fbca04; letter-spacing: 2px;">ASK MADDEN</h2>
     <div class="display">
-        <h1 id="suggestion">PASS</h1>
-        <p id="reasoning">1st Down: Setting the tone.</p>
+        <h1 id="suggestion">...</h1>
+        <p id="reasoning">Setting the Tone...</p>
     </div>
 
     <div class="grid">
@@ -53,20 +51,23 @@
 
 <script>
     let yards = 10;
-    let lastPlay = "PASS";
+    let lastPlayType = "PASS"; // Defaults to PASS because 1st down is a pass
 
     function setDist() {
         let input = prompt("Yards to go?");
         if (input !== null && input !== "") {
             yards = parseInt(input);
-            // Instant "And 5" Check
-            if (yards === 5) {
-                document.getElementById('suggestion').innerText = lastPlay;
-                document.getElementById('reasoning').innerText = "AND 5: Repeating previous play (" + lastPlay + ")";
-            } else {
-                document.getElementById('suggestion').innerText = yards + " YARDS";
-                document.getElementById('reasoning').innerText = "Distance set. Pick your Down.";
-            }
+            updateUIByDistance();
+        }
+    }
+
+    function updateUIByDistance() {
+        if (yards === 5) {
+            document.getElementById('suggestion').innerText = lastPlayType;
+            document.getElementById('reasoning').innerText = "AND 5: REPEAT " + lastPlayType;
+        } else {
+            document.getElementById('suggestion').innerText = yards + " YARDS";
+            document.getElementById('reasoning').innerText = "Pick Down to see Play Call";
         }
     }
 
@@ -74,34 +75,34 @@
         let call = "";
         let note = "";
 
-        // AND 5 LOGIC (REPEAT LAST DOWN)
+        // AND 5 LOGIC (REPEAT PREVIOUS DOWN)
         if (yards === 5) {
-            call = lastPlay;
-            note = "Equal to 5: Repeating what you did on the previous down.";
+            call = lastPlayType;
+            note = "AND 5: REPEAT " + lastPlayType;
         } 
         // 1ST DOWN
         else if (down === 1) {
             call = "PASS";
-            note = "1st Down: Setting the tone.";
+            note = "1st Down: Always Pass.";
         } 
         // 2ND DOWN
         else if (down === 2) {
             if (yards < 5) {
                 call = "PASS";
-                note = "2nd & Less than 5: Pass Attack.";
+                note = "2nd & Less than 5: Pass.";
             } else if (yards > 5) {
                 call = "RUN";
-                note = "2nd & More than 5: Ground Game.";
+                note = "2nd & More than 5: Run.";
             }
         } 
         // 3RD DOWN
         else if (down === 3) {
             if (yards < 5) {
                 call = "RUN";
-                note = "3rd & Less than 5: Power Move.";
+                note = "3rd & Less than 5: Run.";
             } else if (yards > 5) {
                 call = "PASS";
-                note = "3rd & More than 5: Clutch Pass.";
+                note = "3rd & More than 5: Pass.";
             }
         } 
         // 4TH DOWN
@@ -110,9 +111,9 @@
             note = "Consult with Special Teams Coach.";
         }
 
-        // Store play for the next down's potential "And 5"
-        if (call !== "SPECIAL TEAMS") {
-            lastPlay = call;
+        // Only update the "lastPlayType" if we actually called an offensive play
+        if (call === "PASS" || call === "RUN") {
+            lastPlayType = call;
         }
 
         document.getElementById('suggestion').innerText = call;
@@ -121,7 +122,7 @@
 
     function reset() {
         yards = 10;
-        lastPlay = "PASS";
+        lastPlayType = "PASS";
         play(1);
     }
 </script>
