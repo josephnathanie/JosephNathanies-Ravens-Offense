@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ravens: Josephnathanie Master Plan</title>
+    <title>ASK JOSEPH: RAVENS JOSEPHNATHANIE</title>
     <style>
         body { 
             background: radial-gradient(circle, #241773 0%, #120a3d 100%); 
@@ -12,14 +12,14 @@
         }
         .playbook-card { 
             background: rgba(0, 0, 0, 0.9); border: 4px solid #9E7C0C; 
-            width: 380px; padding: 25px; border-radius: 20px; text-align: center; box-shadow: 0 0 30px #241773; 
+            width: 380px; padding: 25px; border-radius: 20px; text-align: center; box-shadow: 0 0 40px #241773; 
         }
         .display { 
             background: #241773; border: 2px solid #fbca04; padding: 20px; 
             margin: 20px 0; border-radius: 12px; min-height: 110px; display: flex; flex-direction: column; justify-content: center;
         }
         #suggestion { font-size: 42px; color: #fbca04; margin: 0; text-shadow: 2px 2px #000; }
-        #reasoning { font-size: 14px; color: #ccc; margin-top: 10px; font-family: 'Segoe UI', sans-serif; text-transform: uppercase; }
+        #reasoning { font-size: 13px; color: #ccc; margin-top: 10px; font-family: 'Segoe UI', sans-serif; text-transform: uppercase; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         button { 
             background: #9E7C0C; color: black; border: 2px solid #fbca04; 
@@ -33,10 +33,12 @@
 <body onload="play(1)">
 
 <div class="playbook-card">
-    <h2 style="margin:0; color:#fbca04; letter-spacing: 2px;">ASK MADDEN</h2>
+    <h2 style="margin:0; color:#fbca04; letter-spacing: 2px;">ASK JOSEPH</h2>
+    <p style="margin:0; font-size: 11px; color:#fff;">RAVENS JOSEPHNATHANIE OFFENSE</p>
+    
     <div class="display">
         <h1 id="suggestion">...</h1>
-        <p id="reasoning">Setting the Tone...</p>
+        <p id="reasoning">Initializing Playbook...</p>
     </div>
 
     <div class="grid">
@@ -51,7 +53,7 @@
 
 <script>
     let yards = 10;
-    let lastPlayType = "PASS"; // Default start for 1st down
+    let lastPlayType = "PASS"; // Default for 1st down
 
     function setDist() {
         let input = prompt("Yards to go?");
@@ -67,7 +69,7 @@
             document.getElementById('reasoning').innerText = "AND 5: REPEAT PREVIOUS DOWN (RUN/PASS: " + lastPlayType + ")";
         } else {
             document.getElementById('suggestion').innerText = yards + " YARDS";
-            document.getElementById('reasoning').innerText = "Pick Down to see Play Call";
+            document.getElementById('reasoning').innerText = "Select Down for Play Call";
         }
     }
 
@@ -75,7 +77,7 @@
         let call = "";
         let note = "";
 
-        // AND 5 LOGIC (REPEAT PREVIOUS DOWN)
+        // AND 5 LOGIC
         if (yards === 5) {
             call = lastPlayType;
             note = "AND 5: REPEAT PREVIOUS DOWN (RUN/PASS: " + lastPlayType + ")";
@@ -108,10 +110,10 @@
         // 4TH DOWN
         else if (down === 4) {
             call = "SPECIAL TEAMS";
-            note = "Consult with Special Teams Coach.";
+            note = "Consult Special Teams Coach.";
         }
 
-        // Store play for memory before updating UI
+        // Memory Update
         if (call === "PASS" || call === "RUN") {
             lastPlayType = call;
         }
