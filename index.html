@@ -15,7 +15,7 @@
             width: 380px; padding: 25px; border-radius: 20px; text-align: center; box-shadow: 0 0 40px #241773; 
         }
         .anniversary-logo { 
-            width: 120px; height: auto; margin-bottom: 15px; 
+            width: 140px; height: auto; margin-bottom: 10px; 
             filter: drop-shadow(0 0 8px #fbca04);
         }
         .display { 
@@ -34,8 +34,10 @@
         .reset-btn { background: #C60C30; color: white; grid-column: span 2; margin-top: 10px; border: none; font-size: 11px; }
     </style>
 </head>
-<body onload="play(1)"> <div class="playbook-card">
-    <img src="https://static.www.baltimoreravens.com/assets/img/logos/30th-season-logo.png" alt="Ravens 30th Anniversary" class="anniversary-logo" onerror="this.src='https://upload.wikimedia.org/wikipedia/en/1/16/Baltimore_Ravens_logo.svg'">
+<body onload="play(1)">
+
+<div class="playbook-card">
+    <img src="https://static.www.baltimoreravens.com/assets/img/logos/30th-season-logo.png" alt="30th Season" class="anniversary-logo" onerror="this.src='https://upload.wikimedia.org/wikipedia/en/1/16/Baltimore_Ravens_logo.svg'">
 
     <h2 style="margin:0; color:#fbca04; letter-spacing: 2px;">ASK JOSEPH</h2>
     <p style="margin:0; font-size: 11px; color:#fff; opacity: 0.8;">RAVENS JOSEPHNATHANIE OFFENSE</p>
@@ -56,24 +58,20 @@
 </div>
 
 <script>
-    let yards = 10;
-    let lastPlayType = "PASS";
+    let currentYards = 10;
+    let memory = "PASS";
 
     function setDist() {
         let input = prompt("Yards to go?");
         if (input !== null && input !== "") {
-            yards = parseInt(input);
-            updateUIByDistance();
-        }
-    }
-
-    function updateUIByDistance() {
-        if (yards === 5) {
-            document.getElementById('suggestion').innerText = lastPlayType;
-            document.getElementById('reasoning').innerText = "AND 5: REPEAT PREVIOUS DOWN (RUN/PASS: " + lastPlayType + ")";
-        } else {
-            document.getElementById('suggestion').innerText = yards + " YARDS";
-            document.getElementById('reasoning').innerText = "Select Down for Play Call";
+            currentYards = parseInt(input);
+            if (currentYards === 5) {
+                document.getElementById('suggestion').innerText = memory;
+                document.getElementById('reasoning').innerText = "AND 5: REPEAT PREVIOUS DOWN (RUN/PASS: " + memory + ")";
+            } else {
+                document.getElementById('suggestion').innerText = currentYards + " YARDS";
+                document.getElementById('reasoning').innerText = "Select Down for Play Call";
+            }
         }
     }
 
@@ -81,39 +79,45 @@
         let call = "";
         let note = "";
 
-        if (yards === 5) {
-            call = lastPlayType;
-            note = "AND 5: REPEAT PREVIOUS DOWN (RUN/PASS: " + lastPlayType + ")";
+        // AND 5 RULE
+        if (currentYards === 5) {
+            call = memory;
+            note = "AND 5: REPEAT PREVIOUS DOWN (RUN/PASS: " + memory + ")";
         } 
+        // 1ST DOWN
         else if (down === 1) {
             call = "PASS";
             note = "1st Down: Always Pass.";
         } 
+        // 2ND DOWN
         else if (down === 2) {
-            if (yards < 5) {
+            if (currentYards < 5) {
                 call = "PASS";
                 note = "2nd & Less than 5: Pass.";
-            } else if (yards > 5) {
+            } else {
                 call = "RUN";
                 note = "2nd & More than 5: Run.";
             }
         } 
+        // 3RD DOWN
         else if (down === 3) {
-            if (yards < 5) {
+            if (currentYards < 5) {
                 call = "RUN";
                 note = "3rd & Less than 5: Run.";
-            } else if (yards > 5) {
+            } else {
                 call = "PASS";
                 note = "3rd & More than 5: Pass.";
             }
         } 
+        // 4TH DOWN
         else if (down === 4) {
             call = "SPECIAL TEAMS";
             note = "Consult Special Teams Coach.";
         }
 
+        // Memory Update
         if (call === "PASS" || call === "RUN") {
-            lastPlayType = call;
+            memory = call;
         }
 
         document.getElementById('suggestion').innerText = call;
@@ -121,8 +125,8 @@
     }
 
     function reset() {
-        yards = 10;
-        lastPlayType = "PASS";
+        currentYards = 10;
+        memory = "PASS";
         play(1);
     }
 </script>
