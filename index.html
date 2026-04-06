@@ -15,18 +15,19 @@
             width: 380px; padding: 25px; border-radius: 20px; text-align: center; box-shadow: 0 0 40px #241773; 
         }
         
-        /* 30TH ANNIVERSARY LOGO STYLE */
+        /* 30TH ANNIVERSARY LOGO */
         .anniversary-logo { 
-            width: 90px; height: auto; margin-bottom: 10px; 
-            filter: drop-shadow(0 0 10px #fbca04); /* Gives the logo a slight gold glow */
+            width: 120px; height: auto; margin-bottom: 15px; 
+            filter: drop-shadow(0 0 8px #fbca04);
         }
         
         .display { 
             background: #241773; border: 2px solid #fbca04; padding: 20px; 
-            margin: 20px 0; border-radius: 12px; min-height: 110px; display: flex; flex-direction: column; justify-content: center;
+            margin: 15px 0; border-radius: 12px; min-height: 110px; display: flex; flex-direction: column; justify-content: center;
         }
         #suggestion { font-size: 42px; color: #fbca04; margin: 0; text-shadow: 2px 2px #000; }
-        #reasoning { font-size: 13px; color: #ccc; margin-top: 10px; font-family: 'Segoe UI', sans-serif; text-transform: uppercase; }
+        #reasoning { font-size: 12px; color: #ccc; margin-top: 10px; font-family: 'Segoe UI', sans-serif; text-transform: uppercase; line-height: 1.4; }
+        
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         button { 
             background: #9E7C0C; color: black; border: 2px solid #fbca04; 
@@ -34,21 +35,21 @@
         }
         button:hover { background: #fbca04; transform: scale(1.02); }
         .dist-btn { grid-column: span 2; background: #fff; color: #000; border: none; margin-bottom: 5px; }
-        .reset-btn { background: #C60C30; color: white; grid-column: span 2; margin-top: 10px; border: none; }
+        .reset-btn { background: #C60C30; color: white; grid-column: span 2; margin-top: 10px; border: none; font-size: 11px; }
     </style>
 </head>
 <body onload="play(1)">
 
 <div class="playbook-card">
     
-    <img src="ravens-30th.png" alt="Ravens 30th Anniversary" class="anniversary-logo">
+    <img src="https://static.www.baltimoreravens.com/assets/img/logos/30th-season-logo.png" alt="Ravens 30th Anniversary" class="anniversary-logo" onerror="this.src='https://upload.wikimedia.org/wikipedia/en/1/16/Baltimore_Ravens_logo.svg'">
 
     <h2 style="margin:0; color:#fbca04; letter-spacing: 2px;">ASK JOSEPH</h2>
-    <p style="margin:0; font-size: 11px; color:#fff;">RAVENS JOSEPHNATHANIE OFFENSE</p>
+    <p style="margin:0; font-size: 11px; color:#fff; opacity: 0.8;">RAVENS JOSEPHNATHANIE OFFENSE</p>
     
     <div class="display">
         <h1 id="suggestion">...</h1>
-        <p id="reasoning">Initializing Playbook...</p>
+        <p id="reasoning">Loading System...</p>
     </div>
 
     <div class="grid">
@@ -63,7 +64,7 @@
 
 <script>
     let yards = 10;
-    let lastPlayType = "PASS"; // Default for 1st down
+    let lastPlayType = "PASS";
 
     function setDist() {
         let input = prompt("Yards to go?");
@@ -95,7 +96,7 @@
         // 1ST DOWN
         else if (down === 1) {
             call = "PASS";
-            note = "1st Down: Always Pass.";
+            note = "1st Down: Setting the tone.";
         } 
         // 2ND DOWN
         else if (down === 2) {
@@ -123,7 +124,6 @@
             note = "Consult Special Teams Coach.";
         }
 
-        // Memory Update
         if (call === "PASS" || call === "RUN") {
             lastPlayType = call;
         }
