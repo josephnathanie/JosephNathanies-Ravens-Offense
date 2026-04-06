@@ -3,108 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ravens: Josephnathanie 30th Season</title>
+    <title>Ravens: Josephnathanie Master Offense</title>
     <style>
-        body { 
-            background: radial-gradient(circle, #241773 0%, #120a3d 100%); 
-            color: white; 
-            font-family: 'Arial Black', sans-serif; 
-            display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; 
-        }
-        .playbook-card { 
-            background: rgba(0, 0, 0, 0.95); border: 4px solid #9E7C0C; width: 380px; 
-            padding: 25px; border-radius: 24px; text-align: center; box-shadow: 0 0 40px #241773; 
-        }
-        .display-area { 
-            background: #241773; border: 2px solid #fbca04; padding: 20px; margin: 15px 0; 
-            border-radius: 15px; min-height: 120px; display: flex; flex-direction: column; justify-content: center;
-        }
-        #suggestion { font-size: 42px; font-weight: 900; color: #fbca04; margin: 0; text-shadow: 2px 2px #000; }
-        #reasoning { font-size: 13px; color: #ccc; margin-top: 8px; font-family: 'Segoe UI', sans-serif; }
+        body { background: #241773; color: white; font-family: 'Arial Black', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .playbook-card { background: #000; border: 4px solid #9E7C0C; width: 350px; padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        .header { border-bottom: 2px solid #9E7C0C; margin-bottom: 20px; padding-bottom: 10px; }
+        .display-box { background: #1a1a1a; border: 2px solid #fff; padding: 25px; margin: 15px 0; border-radius: 10px; min-height: 100px; display: flex; flex-direction: column; justify-content: center; }
+        #suggestion { font-size: 36px; font-weight: 900; color: #fbca04; margin: 0; text-shadow: 2px 2px #000; }
+        #reasoning { font-size: 13px; color: #ccc; margin-top: 10px; font-family: 'Segoe UI', sans-serif; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        button { 
-            background: #9E7C0C; color: #000; border: 1px solid #fbca04; padding: 14px; 
-            cursor: pointer; font-size: 12px; border-radius: 10px; font-weight: 800; text-transform: uppercase; 
-        }
-        button:hover { background: #fbca04; transform: scale(1.02); }
-        .dist-btn { grid-column: span 2; background: #fff; color: #000; margin-bottom: 5px; }
-        .reset-btn { background: #C60C30; color: white; grid-column: span 2; margin-top: 15px; border: none; }
+        button { background: #241773; color: white; border: 1px solid #9E7C0C; padding: 12px; cursor: pointer; font-size: 14px; border-radius: 5px; font-weight: bold; text-transform: uppercase; }
+        button:hover { background: #9E7C0C; color: black; }
+        .dist-btn { grid-column: span 2; background: #fff; color: #000; border: none; margin-bottom: 5px; }
+        .reset-btn { background: #444; grid-column: span 2; margin-top: 15px; border: none; font-size: 12px; }
     </style>
 </head>
-<body onload="callPlay(1)"> <div class="playbook-card">
+<body onload="processDown(1)">
+
+<div class="playbook-card">
     <div class="header">
-        <h2 style="color:#fbca04; margin:0;">ASK JOSEPHNATHANIE</h2>
-        <small>30TH ANNIVERSARY OFFENSE</small>
+        <h2 style="margin:0;">ASK MADDEN</h2>
+        <p style="color: #9E7C0C; margin:0; font-size: 12px;">JOSEPHNATHANIE OFFENSE</p>
     </div>
 
-    <div class="display-area">
-        <h1 id="suggestion">...</h1>
-        <p id="reasoning">Loading Play...</p>
+    <div class="display-box">
+        <h1 id="suggestion">READY</h1>
+        <p id="reasoning">Set distance to begin.</p>
     </div>
 
     <div class="grid">
-        <button class="dist-btn" onclick="updateDist()">SET DISTANCE (AND ?)</button>
-        <button onclick="callPlay(1)">1st Down</button>
-        <button onclick="callPlay(2)">2nd Down</button>
-        <button onclick="callPlay(3)">3rd Down</button>
-        <button onclick="callPlay(4)">4th Down</button>
-        <button onclick="resetAll()" class="reset-btn">Reset Drive</button>
+        <button class="dist-btn" onclick="setDistance()">SET DISTANCE (AND ?)</button>
+        <button onclick="processDown(1)">1ST DOWN</button>
+        <button onclick="processDown(2)">2ND DOWN</button>
+        <button onclick="processDown(3)">3RD DOWN</button>
+        <button onclick="processDown(4)">4TH DOWN</button>
+        <button onclick="resetDrive()" class="reset-btn">RESET DRIVE</button>
     </div>
 </div>
 
 <script>
-    let currentYards = 10;
-    let memory = "PASS"; // Default tone is PASS
-    let currentDown = 1;
+    let currentDist = 10;
+    let lastPlay = "PASS"; // Starts as PASS for 1st down
 
-    function updateDist() {
-        let input = prompt("Yards to go?");
-        if (input !== null && input !== "") {
-            currentYards = parseInt(input);
-            // Instant "And 5" Check
-            if (currentYards === 5) {
-                document.getElementById('suggestion').innerText = memory;
-                document.getElementById('reasoning').innerText = "AND 5 RULE: Repeating " + memory + ".";
+    function setDistance() {
+        let d = prompt("Yards to go?");
+        if (d !== null && d !== "") {
+            currentDist = parseInt(d);
+            // Instant check for "AND 5"
+            if (currentDist === 5) {
+                document.getElementById('suggestion').innerText = lastPlay;
+                document.getElementById('reasoning').innerText = "AND 5: Doing what you did on previous down (" + lastPlay + ").";
             } else {
-                document.getElementById('suggestion').innerText = currentYards + " YDS";
-                document.getElementById('reasoning').innerText = "Distance set. Pick your Down.";
+                document.getElementById('suggestion').innerText = currentDist + " YDS";
+                document.getElementById('reasoning').innerText = "Distance set. Select current down.";
             }
         }
     }
 
-    function callPlay(down) {
-        currentDown = down;
-        let play = "";
-        let logic = "";
+    function processDown(down) {
+        let call = "";
+        let why = "";
 
-        if (currentYards === 5) {
-            play = memory;
-            logic = "Repeat Rule: Doing what we did last play.";
-        } else if (down === 1) {
-            play = "PASS";
-            logic = "1st Down: Always Pass to set the tone.";
-        } else if (down === 2) {
-            play = (currentYards < 5) ? "PASS" : "RUN";
-            logic = (currentYards < 5) ? "2nd & Short: Air it out." : "2nd & Long: Ground attack.";
-        } else if (down === 3) {
-            play = (currentYards < 5) ? "RUN" : "PASS";
-            logic = (currentYards < 5) ? "3rd & Short: Power Run." : "3rd & Long: Clutch Pass.";
-        } else if (down === 4) {
-            play = "SPECIAL TEAMS";
-            logic = "Punt / FG / Go for it.";
+        // RULE: IF DISTANCE IS EXACTLY 5
+        if (currentDist === 5) {
+            call = lastPlay;
+            why = "Repeating " + lastPlay + " because it's 'And 5'.";
+        } 
+        // 1st DOWN
+        else if (down === 1) {
+            call = "PASS";
+            why = "1st Down: Always Pass to set the tone.";
+        } 
+        // 2nd DOWN
+        else if (down === 2) {
+            if (currentDist < 5) {
+                call = "PASS";
+                why = "2nd & Short (<5): Aerial Attack.";
+            } else {
+                call = "RUN";
+                why = "2nd & Long (>5): Ground Game.";
+            }
+        } 
+        // 3rd DOWN
+        else if (down === 3) {
+            if (currentDist < 5) {
+                call = "RUN";
+                why = "3rd & Short (<5): Power Run.";
+            } else {
+                call = "PASS";
+                why = "3rd & Long (>5): Clutch Pass.";
+            }
+        } 
+        // 4th DOWN
+        else if (down === 4) {
+            call = "SPECIAL TEAMS";
+            why = "Consult Special Teams Coach.";
         }
 
-        if (play !== "SPECIAL TEAMS") memory = play;
-        document.getElementById('suggestion').innerText = play;
-        document.getElementById('reasoning').innerText = logic;
+        // Save the play type for the next "And 5" check
+        if (call !== "SPECIAL TEAMS") {
+            lastPlay = call;
+        }
+
+        document.getElementById('suggestion').innerText = call;
+        document.getElementById('reasoning').innerText = why;
     }
 
-    function resetAll() {
-        currentYards = 10;
-        currentDown = 1;
-        memory = "PASS";
-        callPlay(1);
+    function resetDrive() {
+        currentDist = 10;
+        lastPlay = "PASS";
+        processDown(1);
     }
 </script>
+
 </body>
 </html>
