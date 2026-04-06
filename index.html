@@ -51,7 +51,7 @@
 
 <script>
     let yards = 10;
-    let lastPlayType = "PASS"; // Defaults to PASS because 1st down is a pass
+    let lastPlayType = "PASS"; // Default start for 1st down
 
     function setDist() {
         let input = prompt("Yards to go?");
@@ -64,7 +64,7 @@
     function updateUIByDistance() {
         if (yards === 5) {
             document.getElementById('suggestion').innerText = lastPlayType;
-            document.getElementById('reasoning').innerText = "AND 5: REPEAT " + lastPlayType;
+            document.getElementById('reasoning').innerText = "AND 5: REPEAT PREVIOUS DOWN (RUN/PASS: " + lastPlayType + ")";
         } else {
             document.getElementById('suggestion').innerText = yards + " YARDS";
             document.getElementById('reasoning').innerText = "Pick Down to see Play Call";
@@ -78,7 +78,7 @@
         // AND 5 LOGIC (REPEAT PREVIOUS DOWN)
         if (yards === 5) {
             call = lastPlayType;
-            note = "AND 5: REPEAT " + lastPlayType;
+            note = "AND 5: REPEAT PREVIOUS DOWN (RUN/PASS: " + lastPlayType + ")";
         } 
         // 1ST DOWN
         else if (down === 1) {
@@ -111,7 +111,7 @@
             note = "Consult with Special Teams Coach.";
         }
 
-        // Only update the "lastPlayType" if we actually called an offensive play
+        // Store play for memory before updating UI
         if (call === "PASS" || call === "RUN") {
             lastPlayType = call;
         }
