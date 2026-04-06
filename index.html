@@ -79,4 +79,64 @@
         }
     }
 
-    function updateUI()
+    function updateUI() {
+        if (currentYards === 5) {
+            document.getElementById('suggestion').innerText = memory;
+            document.getElementById('reasoning').innerText = "REPEAT PREVIOUS PLAY";
+        } else {
+            document.getElementById('suggestion').innerText = currentYards + " YARDS";
+            document.getElementById('reasoning').innerText = "Select Down for Play Call";
+        }
+    }
+
+    function play(down) {
+        let call = "";
+        let note = "";
+
+        if (currentYards === 5) {
+            call = memory;
+            note = "REPEAT PREVIOUS PLAY";
+        } 
+        else if (down === 1) {
+            call = "PASS";
+            note = "1st Down: Setting the tone.";
+        } 
+        else if (down === 2) {
+            if (currentYards < 5) {
+                call = "PASS";
+                note = "2nd & Less than 5: Pass.";
+            } else {
+                call = "RUN";
+                note = "2nd & More than 5: Run.";
+            }
+        } 
+        else if (down === 3) {
+            if (currentYards < 5) {
+                call = "RUN";
+                note = "3rd & Less than 5: Run.";
+            } else {
+                call = "PASS";
+                note = "3rd & More than 5: Pass.";
+            }
+        } 
+        else if (down === 4) {
+            call = "SPECIAL TEAMS";
+            note = "Consult Special Teams Coach.";
+        }
+
+        if (call === "PASS" || call === "RUN") {
+            memory = call;
+        }
+
+        document.getElementById('suggestion').innerText = call;
+        document.getElementById('reasoning').innerText = note;
+    }
+
+    function reset() {
+        currentYards = 10;
+        memory = "PASS";
+        play(1);
+    }
+</script>
+</body>
+</html>
